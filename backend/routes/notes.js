@@ -4,7 +4,6 @@ const router = express.Router();
 const fetchuser = require('../middleware/fetchuser')
 const Note = require('../models/Note');
 const { body, validationResult } = require('express-validator');
-const { renderIntoDocument } = require('react-dom/test-utils');
 
 // ROUTE 1 : Get all notes using : GET  "/api/notes/getuser".  Login required
 router.get('/fetchallnotes', fetchuser, async (req, res) => {
@@ -25,7 +24,6 @@ router.post('/addnote', fetchuser, [
 
 
     try {
-        const notes = await Note.find({ user: req.user.id })
         const { title, description, tag } = req.body;
         // If there are errors , return bad request and the errors
         const errors = validationResult(req);
@@ -35,9 +33,9 @@ router.post('/addnote', fetchuser, [
         const note = new Note({
             title, description, tag, user: req.user.id
         })
-        const saveNote = await note.save()
+        const savedNote = await note.save()
 
-        res.json(saveNote)
+        res.json(savedNote)
 
     } catch (error) {
         console.error(error.message);
